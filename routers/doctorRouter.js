@@ -8,10 +8,24 @@ const restriction = require('../middlewares/checkAdmin.js');
 const completeProfile = require('../middlewares/completedProfile.js');
 const patientController = require('../controllers/patientController.js');
 const doctorController = require('../controllers/doctorController.js');
+const reviewRouter = require('./reviewRouter.js');
+
+doctorRouter.use('/:doctorId/reviews', reviewRouter);
+
 doctorRouter.use(protectMiddleware.protect);
 doctorRouter.use(restriction.restrictTo('doctor'));
+doctorRouter.use(completeProfile.checkProfileCompletness);
+
+doctorRouter.route('/about-me').get(doctorController.getMeInfo);
+doctorRouter
+  .route('/patients-requests')
+  .get(doctorController.patientsRequestsWithMe);
+doctorRouter.route('/patient-booking/:id').get(doctorController.patientBooking);
+doctorRouter
+  .route('/patient-booking/:id/approve')
+  .post(doctorController.approveBooking);
 
 doctorRouter
-  .route('/about-me')
-  .get(completeProfile.checkProfileCompletness, doctorController.getMeInfo);
+  .route('/patient-booking/:id/reject')
+  .post(doctorController.rejectBooking);
 module.exports = doctorRouter;

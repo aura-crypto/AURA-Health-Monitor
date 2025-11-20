@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const BookingSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Patinet',
+    ref: 'Patient',
     required: true,
   },
 
@@ -17,9 +17,17 @@ const BookingSchema = new mongoose.Schema({
     required: [true, 'please enter the time of the booking session'],
   },
 
+  notes: {
+    type: String,
+    required: [
+      true,
+      'please provide additional info to help the doctor prepare for the session!',
+    ],
+  },
+
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+    enum: ['pending', 'confirmed', 'cancelled', 'rejected', 'completed'],
     default: 'pending',
   },
 
